@@ -20,12 +20,12 @@ BuildRoot: %{_tmppath}/%{name}-%{version}-root
 
 %package devel
 Summary:        Development files for netcdf-3
-Group:          Development/Libraries
+Group:          Development/C
 Requires:       %{name} = %{version}-%{release}
 
 %package static
 Summary:        Static libs for netcdf-3
-Group:          Development/Libraries
+Group:          Development/C
 Requires:       %{name} = %{version}-%{release}
 
 
