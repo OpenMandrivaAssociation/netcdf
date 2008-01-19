@@ -1,6 +1,6 @@
 %define name netcdf
 %define version 3.6.2
-%define release %mkrel 1
+%define release %mkrel 2
 %define major 4
 
 Name: %{name}
