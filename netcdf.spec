@@ -1,6 +1,6 @@
 %define name netcdf
 %define version 3.6.2
-%define release %mkrel 2
+%define release %mkrel 3
 %define major 4
 
 Name: %{name}
@@ -14,7 +14,6 @@ Source2: ftp://ftp.unidata.ucar.edu/pub/netcdf/guidec.html.tar.bz2
 URL: http://www.unidata.ucar.edu/packages/netcdf/index.html
 Group: Development/C
 BuildRequires: gcc-gfortran
-Obsoletes: netcdf-devel <= %{version}
 BuildRoot: %{_tmppath}/%{name}-%{version}-root
 
 
@@ -22,6 +21,7 @@ BuildRoot: %{_tmppath}/%{name}-%{version}-root
 Summary:        Development files for netcdf-3
 Group:          Development/C
 Requires:       %{name} = %{version}-%{release}
+Obsoletes: netcdf-devel <= %{version}
 
 %package static
 Summary:        Static libs for netcdf-3
