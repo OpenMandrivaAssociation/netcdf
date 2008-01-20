@@ -22,11 +22,11 @@ Summary:        Development files for netcdf-3
 Group:          Development/C
 Requires:       %{name} = %{version}-%{release}
 
-%package static
+%package static-devel
 Summary:        Static libs for netcdf-3
 Group:          Development/C
 Requires:       %{name} = %{version}-%{release}
-
+Obsoletes:	%{name}-static
 
 %description
 NetCDF (network Common Data Form) is an interface for array-oriented data
@@ -62,7 +62,7 @@ NetCDF data is:
 This package contains the netCDF-3 header files, shared devel libs, and 
 man pages.
 
-%description static
+%description static-devel
 This package contains the netCDF-3 static libs.
 
 %prep
@@ -128,7 +128,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/*.so
 %{_mandir}/man3/*
 
-%files static
+%files static-devel
 %defattr(-,root,root,-)
 %{_libdir}/*.a
 
