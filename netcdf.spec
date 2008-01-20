@@ -1,6 +1,6 @@
 %define name netcdf
 %define version 3.6.2
-%define release %mkrel 3
+%define release %mkrel 4
 %define major 4
 
 Name: %{name}
@@ -21,7 +21,6 @@ BuildRoot: %{_tmppath}/%{name}-%{version}-root
 Summary:        Development files for netcdf-3
 Group:          Development/C
 Requires:       %{name} = %{version}-%{release}
-Obsoletes: netcdf-devel <= %{version}
 
 %package static
 Summary:        Static libs for netcdf-3
