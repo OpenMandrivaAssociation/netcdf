@@ -98,11 +98,11 @@ mkdir -p ${RPM_BUILD_ROOT}%{_includedir}/netcdf-3
   #  /bin/mv -f ${RPM_BUILD_ROOT}%{_includedir}/netcdf-3/*.mod
   #    ${RPM_BUILD_ROOT}%{_libdir}/netcdf-3
 
-%check
-%make check
-
 bzcat %{SOURCE1} > guidec.pdf
 bzcat %{SOURCE2} | tar xvf -
+
+%check
+%make check
 
 %clean
 rm -rf $RPM_BUILD_ROOT
