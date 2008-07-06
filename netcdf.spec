@@ -1,32 +1,23 @@
-%define name netcdf
-%define version 3.6.2
-%define release %mkrel 5
+%define _disable_ld_as_needed 1
+%define _disable_ld_no_undefined 1
+
 %define major 4
 
-Name: %{name}
-Version: %{version}
-Release: %{release}
-Summary: Libraries to use the Unidata network Common Data Form (netCDF)
-License: distributable (see COPYRIGHT)
-Source0: ftp://ftp.unidata.ucar.edu/pub/netcdf/netcdf-%{version}.tar.bz2
-Source1: ftp://ftp.unidata.ucar.edu/pub/netcdf/guidec.pdf.bz2
-Source2: ftp://ftp.unidata.ucar.edu/pub/netcdf/guidec.html.tar.bz2
-URL: http://www.unidata.ucar.edu/packages/netcdf/index.html
-Group: Development/C
-BuildRequires: gcc-gfortran
-BuildRoot: %{_tmppath}/%{name}-%{version}-root
-
-
-%package devel
-Summary:        Development files for netcdf-3
-Group:          Development/C
-Requires:       %{name} = %{version}-%{release}
-
-%package static-devel
-Summary:        Static libs for netcdf-3
-Group:          Development/C
-Requires:       %{name} = %{version}-%{release}
-Obsoletes:	%{name}-static
+Summary:	Libraries to use the Unidata network Common Data Form (netCDF)
+Name:		netcdf
+Version:	3.6.3
+Release:	%mkrel 1
+Group:		Development/C
+License:	distributable (see COPYRIGHT)
+URL:		http://www.unidata.ucar.edu/packages/netcdf/index.html
+Source0:	ftp://ftp.unidata.ucar.edu/pub/netcdf/netcdf-%{version}.tar.gz
+Source1:	ftp://ftp.unidata.ucar.edu/pub/netcdf/guidec.pdf.bz2
+Source2:	ftp://ftp.unidata.ucar.edu/pub/netcdf/guidec.html.tar.bz2
+Patch0:		typesizes.mod-parallel-make.patch
+Requires(post): info-install
+Requires(postun): info-install
+BuildRequires:	gcc-gfortran
+BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-buildroot
 
 %description
 NetCDF (network Common Data Form) is an interface for array-oriented data
@@ -57,19 +48,34 @@ NetCDF data is:
    o Sharable. One writer and multiple readers may simultaneously access the 
      same netCDF file. 
 
+%package	devel
+Summary:	Development files for netcdf-3
+Group:		Development/C
+Requires:	%{name} = %{version}-%{release}
 
-%description devel
+%description	devel
 This package contains the netCDF-3 header files, shared devel libs, and 
 man pages.
 
-%description static-devel
+%package	static-devel
+Summary:	Static libs for netcdf-3
+Group:		Development/C
+Requires:	%{name} = %{version}-%{release}
+Obsoletes:	%{name}-static
+
+%description	static-devel
 This package contains the netCDF-3 static libs.
 
 %prep
+
 %setup -q 
+%patch0 -p0
+
 perl -pi -e "/^LIBDIR/ and s/\/lib/\/%_lib/g" src/macros.make.*
 
 %build
+#autoreconf -fis
+
 export FC="gfortran"
 export F90="gfortran"
 export CPPFLAGS="-fPIC"
@@ -78,10 +84,14 @@ export F90FLAGS="$FFLAGS"
 export FCFLAGS="$FFLAGS"
 
 %configure2_5x --enable-shared
-%make
+make
 
+%check
+make check
 
 %install
+rm -rf %{buildroot}
+
 %makeinstall
 
 mkdir -p ${RPM_BUILD_ROOT}%{_includedir}/netcdf-3
@@ -101,12 +111,6 @@ mkdir -p ${RPM_BUILD_ROOT}%{_includedir}/netcdf-3
 bzcat %{SOURCE1} > guidec.pdf
 bzcat %{SOURCE2} | tar xvf -
 
-%check
-%make check
-
-%clean
-rm -rf $RPM_BUILD_ROOT
-
 %if %mdkversion < 200900
 %post -p /sbin/ldconfig
 %endif
@@ -114,6 +118,27 @@ rm -rf $RPM_BUILD_ROOT
 %if %mdkversion < 200900
 %postun -p /sbin/ldconfig
 %endif
+
+%post
+%_install_info %{name}.info
+%_install_info netcdf-c.info
+%_install_info netcdf-cxx.info
+%_install_info netcdf-f77.info
+%_install_info netcdf-f90.info
+%_install_info netcdf-install.info
+%_install_info netcdf-tutorial.info
+
+%preun
+%_remove_install_info %{name}.info
+%_remove_install_info netcdf-c.info
+%_remove_install_info netcdf-cxx.info
+%_remove_install_info netcdf-f77.info
+%_remove_install_info netcdf-f90.info
+%_remove_install_info netcdf-install.info
+%_remove_install_info netcdf-tutorial.info
+
+%clean
+rm -rf %{buildroot}
 
 %files
 %defattr(-,root,root)
@@ -125,6 +150,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*.3*
 %{_libdir}/*.so.%{major}
 %{_libdir}/*.so.%{major}.*
+%{_infodir}/*
 
 %files devel
 %defattr(-,root,root,-)
@@ -135,6 +161,3 @@ rm -rf $RPM_BUILD_ROOT
 %files static-devel
 %defattr(-,root,root,-)
 %{_libdir}/*.a
-
-
-
