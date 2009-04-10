@@ -1,6 +1,3 @@
-%define _disable_ld_as_needed 1
-%define _disable_ld_no_undefined 1
-
 %define major 4
 
 Summary:	Libraries to use the Unidata network Common Data Form (netCDF)
@@ -14,6 +11,7 @@ Source0:	ftp://ftp.unidata.ucar.edu/pub/netcdf/netcdf-%{version}.tar.gz
 Source1:	ftp://ftp.unidata.ucar.edu/pub/netcdf/guidec.pdf.bz2
 Source2:	ftp://ftp.unidata.ucar.edu/pub/netcdf/guidec.html.tar.bz2
 Patch0:		typesizes.mod-parallel-make.patch
+Patch1:		netcdf-4.0-fix-str-fmt.patch
 Requires(post): info-install
 Requires(postun): info-install
 BuildRequires:	gcc-gfortran
@@ -70,6 +68,7 @@ This package contains the netCDF-3 static libs.
 
 %setup -q 
 %patch0 -p0
+%patch1 -p0
 
 perl -pi -e "/^LIBDIR/ and s/\/lib/\/%_lib/g" src/macros.make.*
 
@@ -83,6 +82,8 @@ export FFLAGS="-fPIC %optflags"
 export F90FLAGS="$FFLAGS"
 export FCFLAGS="$FFLAGS"
 
+%define _disable_ld_as_needed 1
+%define _disable_ld_no_undefined 1
 %configure2_5x --enable-shared
 make
 
