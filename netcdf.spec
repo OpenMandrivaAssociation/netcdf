@@ -2,7 +2,7 @@
 
 Summary:	Libraries to use the Unidata network Common Data Form (netCDF)
 Name:		netcdf
-Version:	4.0
+Version:	4.0.1
 Release:	%mkrel 1
 Group:		Development/C
 License:	NetCDF
@@ -10,11 +10,12 @@ URL:		http://www.unidata.ucar.edu/packages/netcdf/index.html
 Source0:	ftp://ftp.unidata.ucar.edu/pub/netcdf/netcdf-%{version}.tar.gz
 Source1:	ftp://ftp.unidata.ucar.edu/pub/netcdf/guidec.pdf.bz2
 Source2:	ftp://ftp.unidata.ucar.edu/pub/netcdf/guidec.html.tar.bz2
-Patch0:		typesizes.mod-parallel-make.patch
-Patch1:		netcdf-4.0-fix-str-fmt.patch
+#Patch0:		typesizes.mod-parallel-make.patch
+Patch1:		netcdf-4.0.1-fix-str-fmt.patch
 Requires(post): info-install
 Requires(postun): info-install
 BuildRequires:	gcc-gfortran
+BuildRequires:	hdf5-devel
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-buildroot
 
 %description
@@ -47,7 +48,7 @@ NetCDF data is:
      same netCDF file. 
 
 %package	devel
-Summary:	Development files for netcdf-3
+Summary:	Development files for netcdf-4
 Group:		Development/C
 Requires:	%{name} = %{version}-%{release}
 
@@ -56,18 +57,18 @@ This package contains the netCDF-3 header files, shared devel libs, and
 man pages.
 
 %package	static-devel
-Summary:	Static libs for netcdf-3
+Summary:	Static libs for netcdf-4
 Group:		Development/C
 Requires:	%{name} = %{version}-%{release}
 Obsoletes:	%{name}-static
 
 %description	static-devel
-This package contains the netCDF-3 static libs.
+This package contains the netCDF-4 static libs.
 
 %prep
 
 %setup -q 
-%patch0 -p0
+#%patch0 -p0
 %patch1 -p0
 
 perl -pi -e "/^LIBDIR/ and s/\/lib/\/%_lib/g" src/macros.make.*
@@ -84,7 +85,7 @@ export FCFLAGS="$FFLAGS"
 
 %define _disable_ld_as_needed 1
 %define _disable_ld_no_undefined 1
-%configure2_5x --enable-shared
+%configure2_5x --enable-shared --enable-netcdf-4
 make
 
 %check
@@ -95,19 +96,19 @@ rm -rf %{buildroot}
 
 %makeinstall
 
-mkdir -p ${RPM_BUILD_ROOT}%{_includedir}/netcdf-3
-/bin/mv ${RPM_BUILD_ROOT}%{_includedir}/*.* \
-  ${RPM_BUILD_ROOT}%{_includedir}/netcdf-3
-  /bin/rm -f ${RPM_BUILD_ROOT}%{_libdir}/*.la
+#mkdir -p %{buildroot}%{_includedir}/netcdf-3
+#/bin/mv %{buildroot}%{_includedir}/*.* \
+##  %{buildroot}%{_includedir}/netcdf-3
+#  /bin/rm -f %{buildroot}%{_libdir}/*.la
   #
   #  Does the /usr/include/netcdf-3/netcdf.mod file really belong in 
   #  /usr/include/netcdf-3/ or should it go in /usr/lib/netcdf-3 ???
   #  I suppose this should be decided on after some testing since the 
   #  gfortran *.mod file appears to be ACSII text, not a binary file.
   #
-  #  mkdir -p ${RPM_BUILD_ROOT}%{_libdir}/netcdf-3
-  #  /bin/mv -f ${RPM_BUILD_ROOT}%{_includedir}/netcdf-3/*.mod
-  #    ${RPM_BUILD_ROOT}%{_libdir}/netcdf-3
+  #  mkdir -p %{buildroot}%{_libdir}/netcdf-3
+  #  /bin/mv -f %{buildroot}%{_includedir}/netcdf-3/*.mod
+  #    %{buildroot}%{_libdir}/netcdf-3
 
 bzcat %{SOURCE1} > guidec.pdf
 bzcat %{SOURCE2} | tar xvf -
@@ -155,7 +156,7 @@ rm -rf %{buildroot}
 
 %files devel
 %defattr(-,root,root,-)
-%{_includedir}/netcdf-3
+%{_includedir}/*.h
 %{_libdir}/*.so
 %{_mandir}/man3/*
 
