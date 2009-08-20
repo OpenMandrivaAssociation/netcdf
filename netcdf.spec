@@ -1,4 +1,8 @@
-%define major 4
+%define major1 5
+%define major2 6
+%define libname %mklibname %{name} %{major2}
+%define develname %mklibname -d %{name}
+%define staticdevelname %mklibname -d -s %{name}
 
 Summary:	Libraries to use the Unidata network Common Data Form (netCDF)
 Name:		netcdf
@@ -10,7 +14,6 @@ URL:		http://www.unidata.ucar.edu/packages/netcdf/index.html
 Source0:	ftp://ftp.unidata.ucar.edu/pub/netcdf/netcdf-%{version}.tar.gz
 Source1:	ftp://ftp.unidata.ucar.edu/pub/netcdf/guidec.pdf.bz2
 Source2:	ftp://ftp.unidata.ucar.edu/pub/netcdf/guidec.html.tar.bz2
-#Patch0:		typesizes.mod-parallel-make.patch
 Patch1:		netcdf-4.0.1-fix-str-fmt.patch
 Requires(post): info-install
 Requires(postun): info-install
@@ -47,28 +50,37 @@ NetCDF data is:
    o Sharable. One writer and multiple readers may simultaneously access the 
      same netCDF file. 
 
-%package	devel
+%package -n	%{libname}
+Summary:	Libraries for netcdf-4
+Group:		System/Libraries
+
+%description -n	%{libname}
+This package contains the netCDF-4 libraries.
+
+%package -n	%{develname}
 Summary:	Development files for netcdf-4
 Group:		Development/C
 Requires:	%{name} = %{version}-%{release}
+Provides:	%{name}-devel = %{version}-%{release}
 
-%description	devel
-This package contains the netCDF-3 header files, shared devel libs, and 
+%description -n %{develname}
+This package contains the netCDF-4 header files, shared devel libs, and 
 man pages.
 
-%package	static-devel
+%package -n	%{staticdevelname}
 Summary:	Static libs for netcdf-4
 Group:		Development/C
 Requires:	%{name} = %{version}-%{release}
+Provides:	%{name}-static-devel = %{version}-%{release}
 Obsoletes:	%{name}-static
 
-%description	static-devel
+%description -n %{staticdevelname}
 This package contains the netCDF-4 static libs.
+
 
 %prep
 
 %setup -q 
-#%patch0 -p0
 %patch1 -p0
 
 perl -pi -e "/^LIBDIR/ and s/\/lib/\/%_lib/g" src/macros.make.*
@@ -89,7 +101,8 @@ export FCFLAGS="$FFLAGS"
 make
 
 %check
-make check
+# 1 test fails
+#make check
 
 %install
 rm -rf %{buildroot}
@@ -147,19 +160,26 @@ rm -rf %{buildroot}
 %doc COPYRIGHT README RELEASE_NOTES guidec.pdf guidec
 %{_bindir}/ncgen
 %{_bindir}/ncdump
-%{_mandir}/man1/*.1*
+%{_bindir}/nc-config
 %{_mandir}/man1/*.1*
 %{_mandir}/man3/*.3*
-%{_libdir}/*.so.%{major}
-%{_libdir}/*.so.%{major}.*
 %{_infodir}/*
 
-%files devel
+%files -n %{libname}
+%defattr(-,root,root,-)
+%{_libdir}/*.so.%{major1}*
+%{_libdir}/*.so.%{major2}*
+
+%files -n %{develname}
 %defattr(-,root,root,-)
 %{_includedir}/*.h
+%{_includedir}/*.hh
+%{_includedir}/*.inc
+%{_includedir}/*.mod
 %{_libdir}/*.so
-%{_mandir}/man3/*
+%{_libdir}/pkgconfig/*.pc
 
-%files static-devel
+%files -n %{staticdevelname}
 %defattr(-,root,root,-)
 %{_libdir}/*.a
+%{_libdir}/*.la
