@@ -1,13 +1,12 @@
-%define major1 5
-%define major2 6
-%define libname %mklibname %{name} %{major2}
+%define major 4
+%define libname %mklibname %{name} %{major}
 %define develname %mklibname -d %{name}
 %define staticdevelname %mklibname -d -s %{name}
 
 Summary:	Libraries to use the Unidata network Common Data Form (netCDF)
 Name:		netcdf
 Version:	4.0.1
-Release:	%mkrel 4
+Release:	%mkrel 5
 Group:		Development/C
 License:	NetCDF
 URL:		http://www.unidata.ucar.edu/packages/netcdf/index.html
@@ -18,7 +17,7 @@ Patch1:		netcdf-4.0.1-fix-str-fmt.patch
 Requires(post): info-install
 Requires(postun): info-install
 BuildRequires:	gcc-gfortran
-BuildRequires:	hdf5-devel
+#BuildRequires:	hdf5-devel
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-buildroot
 
 %description
@@ -54,6 +53,7 @@ NetCDF data is:
 Summary:	Libraries for netcdf-4
 Group:		System/Libraries
 Provides:	lib%{name} = %{version}
+Obsoletes:	%{_lib}netcdf6
 
 %description -n	%{libname}
 This package contains the netCDF-4 libraries.
@@ -88,8 +88,6 @@ This package contains the netCDF-4 static libs.
 
 perl -pi -e "/^LIBDIR/ and s/\/lib/\/%_lib/g" src/macros.make.*
 
-%build
-#autoreconf -fis
 
 export FC="gfortran"
 export F90="gfortran"
@@ -98,9 +96,8 @@ export FFLAGS="-fPIC %optflags"
 export F90FLAGS="$FFLAGS"
 export FCFLAGS="$FFLAGS"
 
-%define _disable_ld_as_needed 1
 %define _disable_ld_no_undefined 1
-%configure2_5x --enable-shared --enable-netcdf-4 --enable-ncgen4
+%configure2_5x --enable-shared
 make
 
 %check
@@ -111,20 +108,6 @@ make
 rm -rf %{buildroot}
 
 %makeinstall
-
-#mkdir -p %{buildroot}%{_includedir}/netcdf-3
-#/bin/mv %{buildroot}%{_includedir}/*.* \
-##  %{buildroot}%{_includedir}/netcdf-3
-#  /bin/rm -f %{buildroot}%{_libdir}/*.la
-  #
-  #  Does the /usr/include/netcdf-3/netcdf.mod file really belong in 
-  #  /usr/include/netcdf-3/ or should it go in /usr/lib/netcdf-3 ???
-  #  I suppose this should be decided on after some testing since the 
-  #  gfortran *.mod file appears to be ACSII text, not a binary file.
-  #
-  #  mkdir -p %{buildroot}%{_libdir}/netcdf-3
-  #  /bin/mv -f %{buildroot}%{_includedir}/netcdf-3/*.mod
-  #    %{buildroot}%{_libdir}/netcdf-3
 
 bzcat %{SOURCE1} > guidec.pdf
 bzcat %{SOURCE2} | tar xvf -
@@ -162,17 +145,14 @@ rm -rf %{buildroot}
 %defattr(-,root,root)
 %doc COPYRIGHT README RELEASE_NOTES guidec.pdf guidec
 %{_bindir}/ncgen
-%{_bindir}/ncgen4
 %{_bindir}/ncdump
 %{_bindir}/nc-config
 %{_mandir}/man1/*.1*
-%{_mandir}/man3/*.3*
 %{_infodir}/*
 
 %files -n %{libname}
 %defattr(-,root,root,-)
-%{_libdir}/*.so.%{major1}*
-%{_libdir}/*.so.%{major2}*
+%{_libdir}/*.so.%{major}*
 
 %files -n %{develname}
 %defattr(-,root,root,-)
@@ -181,6 +161,7 @@ rm -rf %{buildroot}
 %{_includedir}/*.inc
 %{_includedir}/*.mod
 %{_libdir}/*.so
+%{_mandir}/man3/*.3*
 %{_libdir}/pkgconfig/*.pc
 
 %files -n %{staticdevelname}
