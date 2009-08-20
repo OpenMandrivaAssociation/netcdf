@@ -7,7 +7,7 @@
 Summary:	Libraries to use the Unidata network Common Data Form (netCDF)
 Name:		netcdf
 Version:	4.0.1
-Release:	%mkrel 2
+Release:	%mkrel 3
 Group:		Development/C
 License:	NetCDF
 URL:		http://www.unidata.ucar.edu/packages/netcdf/index.html
@@ -61,6 +61,7 @@ This package contains the netCDF-4 libraries.
 Summary:	Development files for netcdf-4
 Group:		Development/C
 Requires:	%{name} = %{version}-%{release}
+Requires:	hdf5-devel
 Provides:	%{name}-devel = %{version}-%{release}
 Obsoletes:	%{name}-devel
 
@@ -98,7 +99,7 @@ export FCFLAGS="$FFLAGS"
 
 %define _disable_ld_as_needed 1
 %define _disable_ld_no_undefined 1
-%configure2_5x --enable-shared --enable-netcdf-4
+%configure2_5x --enable-shared --enable-netcdf-4 --enable-ncgen4
 make
 
 %check
@@ -160,6 +161,7 @@ rm -rf %{buildroot}
 %defattr(-,root,root)
 %doc COPYRIGHT README RELEASE_NOTES guidec.pdf guidec
 %{_bindir}/ncgen
+%{_bindir}/ncgen4
 %{_bindir}/ncdump
 %{_bindir}/nc-config
 %{_mandir}/man1/*.1*
