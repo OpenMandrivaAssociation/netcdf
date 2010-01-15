@@ -1,23 +1,32 @@
-%define major 4
-%define libname %mklibname %{name} %{major}
+%define major_c 6
+%define major_cmm 5
+%define major_fortran 5
+
+%define libname %mklibname %{name} %{major_c}
+%define libname_mm %mklibname %{name}mm %{major_cmm}
+%define libname_fortran %mklibname %{name}_fortran %{major_fortran}
 %define develname %mklibname -d %{name}
 %define staticdevelname %mklibname -d -s %{name}
 
 Summary:	Libraries to use the Unidata network Common Data Form (netCDF)
 Name:		netcdf
 Version:	4.0.1
-Release:	%mkrel 5
+Release:	%mkrel 6
 Group:		Development/C
 License:	NetCDF
 URL:		http://www.unidata.ucar.edu/packages/netcdf/index.html
 Source0:	ftp://ftp.unidata.ucar.edu/pub/netcdf/netcdf-%{version}.tar.gz
 Source1:	ftp://ftp.unidata.ucar.edu/pub/netcdf/guidec.pdf.bz2
 Source2:	ftp://ftp.unidata.ucar.edu/pub/netcdf/guidec.html.tar.bz2
+Patch0:		http://mirror.yandex.ru/gentoo-portage/sci-libs/netcdf/files/netcdf-4.0.1-as-needed.patch
 Patch1:		netcdf-4.0.1-fix-str-fmt.patch
 Requires(post): info-install
 Requires(postun): info-install
 BuildRequires:	gcc-gfortran
-#BuildRequires:	hdf5-devel
+BuildRequires:  hdf5-devel
+BuildRequires:  libcurl-devel
+BuildRequires:  zlib-devel
+BuildRequires:  valgrind
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-buildroot
 
 %description
@@ -50,20 +59,37 @@ NetCDF data is:
      same netCDF file. 
 
 %package -n	%{libname}
-Summary:	Libraries for netcdf-4
+Summary:	C libraries for netcdf-4
 Group:		System/Libraries
 Provides:	lib%{name} = %{version}
 Obsoletes:	%{_lib}netcdf6
 
 %description -n	%{libname}
-This package contains the netCDF-4 libraries.
+This package contains the netCDF-4 C libraries.
+
+%package -n	%{libname_mm}
+Summary:	C++ libraries for netcdf-4
+Group:		System/Libraries
+Provides:	lib%{name_mm} = %{version}
+
+%description -n	%{libname_mm}
+This package contains the netCDF-4 C++ libraries.
+
+%package -n	%{libname_fortran}
+Summary:	Fortran libraries for netcdf-4
+Group:		System/Libraries
+Provides:	lib%{name_fortran} = %{version}
+
+%description -n	%{libname_fortran}
+This package contains the netCDF-4 fortran libraries.
 
 %package -n	%{develname}
 Summary:	Development files for netcdf-4
 Group:		Development/C
 Requires:	%{name} = %{version}-%{release}
 Requires:	hdf5-devel
-Provides:	%{name}-devel = %{version}-%{release}
+Provides:	lib%{name}-devel
+Provides:	%{name}-devel
 Obsoletes:	%{name}-devel
 
 %description -n %{develname}
@@ -74,8 +100,9 @@ man pages.
 Summary:	Static libs for netcdf-4
 Group:		Development/C
 Requires:	%{name} = %{version}-%{release}
-Provides:	%{name}-static-devel = %{version}-%{release}
-Obsoletes:	%{name}-static
+Provides:	lib%{name}-static-devel
+Provides:	%{name}-static-devel
+Obsoletes:	%{name}-static-devel
 
 %description -n %{staticdevelname}
 This package contains the netCDF-4 static libs.
@@ -83,7 +110,8 @@ This package contains the netCDF-4 static libs.
 
 %prep
 
-%setup -q 
+%setup -q
+%patch0 -p1
 %patch1 -p0
 
 perl -pi -e "/^LIBDIR/ and s/\/lib/\/%_lib/g" src/macros.make.*
@@ -96,9 +124,14 @@ export FFLAGS="-fPIC %optflags"
 export F90FLAGS="$FFLAGS"
 export FCFLAGS="$FFLAGS"
 
-%define _disable_ld_no_undefined 1
-%configure2_5x --enable-shared
-make
+##%define _disable_ld_no_undefined 1
+%configure2_5x --enable-shared \
+		--enable-netcdf-4 \
+           	--enable-ncgen4 \
+           	--enable-extra-example-tests \
+           	--enable-valgrind-tests
+
+%make
 
 %check
 # 1 test fails
@@ -145,6 +178,7 @@ rm -rf %{buildroot}
 %defattr(-,root,root)
 %doc COPYRIGHT README RELEASE_NOTES guidec.pdf guidec
 %{_bindir}/ncgen
+%{_bindir}/ncgen4
 %{_bindir}/ncdump
 %{_bindir}/nc-config
 %{_mandir}/man1/*.1*
@@ -152,7 +186,15 @@ rm -rf %{buildroot}
 
 %files -n %{libname}
 %defattr(-,root,root,-)
-%{_libdir}/*.so.%{major}*
+%{_libdir}/libnetcdf.so.%{major_c}*
+
+%files -n %{libname_mm}
+%defattr(-,root,root,-)
+%{_libdir}/libnetcdf_c++.so.%{major_cmm}*
+
+%files -n %{libname_fortran}
+%defattr(-,root,root,-)
+%{_libdir}/libnetcdff.so.%{major_fortran}*
 
 %files -n %{develname}
 %defattr(-,root,root,-)
