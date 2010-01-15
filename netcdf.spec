@@ -11,7 +11,7 @@
 Summary:	Libraries to use the Unidata network Common Data Form (netCDF)
 Name:		netcdf
 Version:	4.0.1
-Release:	%mkrel 7
+Release:	%mkrel 8
 Group:		Development/C
 License:	NetCDF
 URL:		http://www.unidata.ucar.edu/packages/netcdf/index.html
@@ -87,6 +87,8 @@ This package contains the netCDF-4 fortran libraries.
 Summary:	Development files for netcdf-4
 Group:		Development/C
 Requires:	%{name} = %{version}-%{release}
+Requires:	%{libname_mm} = %{version}-%{release}
+Requires:	%{libname_fortran} = %{version}-%{release}
 Requires:	hdf5-devel
 Provides:	lib%{name}-devel
 Provides:	%{name}-devel
@@ -99,7 +101,7 @@ man pages.
 %package -n	%{staticdevelname}
 Summary:	Static libs for netcdf-4
 Group:		Development/C
-Requires:	%{name} = %{version}-%{release}
+Requires:	%{develname} = %{version}-%{release}
 Provides:	lib%{name}-static-devel
 Provides:	%{name}-static-devel
 Obsoletes:	%{name}-static-devel
