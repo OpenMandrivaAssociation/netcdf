@@ -11,14 +11,14 @@
 Summary:	Libraries to use the Unidata network Common Data Form (netCDF)
 Name:		netcdf
 Version:	4.0.1
-Release:	%mkrel 8
+Release:	%mkrel 9
 Group:		Development/C
 License:	NetCDF
 URL:		http://www.unidata.ucar.edu/packages/netcdf/index.html
 Source0:	ftp://ftp.unidata.ucar.edu/pub/netcdf/netcdf-%{version}.tar.gz
 Source1:	ftp://ftp.unidata.ucar.edu/pub/netcdf/guidec.pdf.bz2
 Source2:	ftp://ftp.unidata.ucar.edu/pub/netcdf/guidec.html.tar.bz2
-Patch0:		http://mirror.yandex.ru/gentoo-portage/sci-libs/netcdf/files/netcdf-4.0.1-as-needed.patch
+Patch0:		netcdf-4.0.1-as-needed.patch
 Patch1:		netcdf-4.0.1-fix-str-fmt.patch
 Requires(post): info-install
 Requires(postun): info-install
@@ -62,7 +62,6 @@ NetCDF data is:
 Summary:	C libraries for netcdf-4
 Group:		System/Libraries
 Provides:	lib%{name} = %{version}
-#Obsoletes:	%{_lib}netcdf6
 
 %description -n	%{libname}
 This package contains the netCDF-4 C libraries.
