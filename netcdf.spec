@@ -10,16 +10,15 @@
 
 Summary:	Libraries to use the Unidata network Common Data Form (netCDF)
 Name:		netcdf
-Version:	4.0.1
-Release:	%mkrel 11
+Version:	4.1
+Release:	%mkrel 1
 Group:		Development/C
 License:	NetCDF
 URL:		http://www.unidata.ucar.edu/packages/netcdf/index.html
 Source0:	ftp://ftp.unidata.ucar.edu/pub/netcdf/netcdf-%{version}.tar.gz
 Source1:	ftp://ftp.unidata.ucar.edu/pub/netcdf/guidec.pdf.bz2
 Source2:	ftp://ftp.unidata.ucar.edu/pub/netcdf/guidec.html.tar.bz2
-Patch0:		netcdf-4.0.1-as-needed.patch
-Patch1:		netcdf-4.0.1-fix-str-fmt.patch
+Patch1:		netcdf-4.1-fix-str-fmt.patch
 Requires(post): info-install
 Requires(postun): info-install
 BuildRequires:	gcc-gfortran
@@ -110,22 +109,18 @@ This package contains the netCDF-4 static libs.
 
 
 %prep
-
 %setup -q
-%patch0 -p1
 %patch1 -p0
 
-perl -pi -e "/^LIBDIR/ and s/\/lib/\/%_lib/g" src/macros.make.*
-
-
+%build
 export FC="gfortran"
 export F90="gfortran"
-export CPPFLAGS="-fPIC"
+export CPPFLAGS="%optflags -fPIC"
 export FFLAGS="-fPIC %optflags"
 export F90FLAGS="$FFLAGS"
 export FCFLAGS="$FFLAGS"
 
-%define _disable_ld_no_undefined 1
+#define _disable_ld_no_undefined 1
 %configure2_5x --enable-shared \
 		--enable-netcdf-4 \
            	--enable-ncgen4 \
