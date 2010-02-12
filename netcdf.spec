@@ -19,6 +19,7 @@ Source0:	ftp://ftp.unidata.ucar.edu/pub/netcdf/netcdf-%{version}.tar.gz
 Source1:	ftp://ftp.unidata.ucar.edu/pub/netcdf/guidec.pdf.bz2
 Source2:	ftp://ftp.unidata.ucar.edu/pub/netcdf/guidec.html.tar.bz2
 Patch1:		netcdf-4.1-fix-str-fmt.patch
+Patch2:		netcdf-4.1-pkgconfig.patch
 Requires(post): info-install
 Requires(postun): info-install
 BuildRequires:	gcc-gfortran
@@ -26,6 +27,8 @@ BuildRequires:  hdf5-devel
 BuildRequires:  libcurl-devel
 BuildRequires:  zlib-devel
 BuildRequires:  valgrind
+BuildRequires:	texinfo
+BuildRequires:	groff
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-buildroot
 
 %description
@@ -91,6 +94,7 @@ Requires:	hdf5-devel
 Provides:	lib%{name}-devel
 Provides:	%{name}-devel
 Obsoletes:	%{name}-devel
+Conflicts:	%{name} < 4.1
 
 %description -n %{develname}
 This package contains the netCDF-4 header files, shared devel libs, and 
@@ -111,6 +115,7 @@ This package contains the netCDF-4 static libs.
 %prep
 %setup -q
 %patch1 -p0
+%patch2 -p1
 
 %build
 export FC="gfortran"
@@ -120,23 +125,21 @@ export FFLAGS="-fPIC %optflags"
 export F90FLAGS="$FFLAGS"
 export FCFLAGS="$FFLAGS"
 
-#define _disable_ld_no_undefined 1
+%define _disable_ld_no_undefined 1
 %configure2_5x --enable-shared \
 		--enable-netcdf-4 \
-           	--enable-ncgen4 \
            	--enable-extra-example-tests \
            	--enable-valgrind-tests
 
 %make
 
 %check
-# 1 test fails
-#make check
+make check
 
 %install
 rm -rf %{buildroot}
 
-%makeinstall
+%makeinstall_std
 
 bzcat %{SOURCE1} > guidec.pdf
 bzcat %{SOURCE2} | tar xvf -
@@ -174,9 +177,9 @@ rm -rf %{buildroot}
 %defattr(-,root,root)
 %doc COPYRIGHT README RELEASE_NOTES guidec.pdf guidec
 %{_bindir}/ncgen
-%{_bindir}/ncgen4
+%{_bindir}/ncgen3
 %{_bindir}/ncdump
-%{_bindir}/nc-config
+%{_bindir}/nccopy
 %{_mandir}/man1/*.1*
 %{_infodir}/*
 
@@ -194,6 +197,7 @@ rm -rf %{buildroot}
 
 %files -n %{develname}
 %defattr(-,root,root,-)
+%{_bindir}/nc-config
 %{_includedir}/*.h
 %{_includedir}/*.hh
 %{_includedir}/*.inc
