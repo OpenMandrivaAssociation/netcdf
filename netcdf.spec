@@ -134,7 +134,7 @@ export FCFLAGS="$FFLAGS"
            	--enable-valgrind-tests \
 		--disable-dap-remote-tests
 
-%make
+make
 
 %check
 make check
