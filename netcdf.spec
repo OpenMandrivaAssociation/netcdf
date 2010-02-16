@@ -28,6 +28,7 @@ BuildRequires:  libcurl-devel
 BuildRequires:  zlib-devel
 BuildRequires:  valgrind
 BuildRequires:	texinfo
+BuildRequires:	tetex-latex
 BuildRequires:	groff
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-buildroot
 
@@ -134,7 +135,7 @@ export FCFLAGS="$FFLAGS"
            	--enable-valgrind-tests \
 		--disable-dap-remote-tests
 
-make
+%make
 
 %check
 make check
