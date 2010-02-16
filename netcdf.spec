@@ -128,8 +128,11 @@ export FCFLAGS="$FFLAGS"
 %define _disable_ld_no_undefined 1
 %configure2_5x --enable-shared \
 		--enable-netcdf-4 \
+		--enable-ncgen4 \
+		--enable-dap \
            	--enable-extra-example-tests \
-           	--enable-valgrind-tests
+           	--enable-valgrind-tests \
+		--disable-dap-remote-tests
 
 %make
 
