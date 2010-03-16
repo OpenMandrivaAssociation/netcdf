@@ -94,7 +94,7 @@ Requires:	%{libname_fortran} = %{version}-%{release}
 Requires:	hdf5-devel
 Provides:	lib%{name}-devel
 Provides:	%{name}-devel
-Obsoletes:	%{name}-devel
+Obsoletes:	%{name}-devel < 4.0
 Conflicts:	%{name} < 4.1
 
 %description -n %{develname}
