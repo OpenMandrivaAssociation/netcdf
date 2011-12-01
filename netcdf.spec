@@ -1,5 +1,5 @@
-%define major_c 6
-%define major_cmm 5
+%define major_c 7
+%define major_cmm 4
 %define major_fortran 5
 
 %define libname %mklibname %{name} %{major_c}
@@ -10,23 +10,22 @@
 
 Summary:	Libraries to use the Unidata network Common Data Form (netCDF)
 Name:		netcdf
-Version:	4.1.1
-Release:	%mkrel 3
+Version:	4.1.3
+Release:	%mkrel 1
 Group:		Development/C
 License:	NetCDF
 URL:		http://www.unidata.ucar.edu/packages/netcdf/index.html
 Source0:	ftp://ftp.unidata.ucar.edu/pub/netcdf/netcdf-%{version}.tar.gz
 Source1:	ftp://ftp.unidata.ucar.edu/pub/netcdf/guidec.pdf.bz2
 Source2:	ftp://ftp.unidata.ucar.edu/pub/netcdf/guidec.html.tar.bz2
-Patch1:		netcdf-4.1-fix-str-fmt.patch
 Patch2:		netcdf-4.1-pkgconfig.patch
-Requires(post): info-install
+Requires(post):	info-install
 Requires(postun): info-install
 BuildRequires:	gcc-gfortran
-BuildRequires:  hdf5-devel
-BuildRequires:  libcurl-devel
-BuildRequires:  zlib-devel
-BuildRequires:  valgrind
+BuildRequires:	 hdf5-devel
+BuildRequires:	libcurl-devel
+BuildRequires:	zlib-devel
+BuildRequires:	valgrind
 BuildRequires:	texinfo
 BuildRequires:	tetex-latex
 BuildRequires:	groff
@@ -34,37 +33,36 @@ BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-buildroot
 
 %description
 NetCDF (network Common Data Form) is an interface for array-oriented data
-access and a freely-distributed collection of software libraries for C, 
+access and a freely-distributed collection of software libraries for C,
 Fortran, C++, and perl that provides an implementation of the interface.
 The netCDF library also defines a machine-independent format for representing
-scientific data. Together, the interface, library, and format support the 
-creation, access, and sharing of scientific data. The netCDF software was 
+scientific data. Together, the interface, library, and format support the
+creation, access, and sharing of scientific data. The netCDF software was
 developed at the Unidata Program Center in Boulder, Colorado.
 
-NetCDF data is: 
+NetCDF data is:
 
    o Self-Describing. A netCDF file includes information about the data it
-     contains. 
+     contains.
 
-   o Network-transparent. A netCDF file is represented in a form that can be 
+   o Network-transparent. A netCDF file is represented in a form that can be
      accessed by computers with different ways of storing integers, characters,
-     and floating-point numbers. 
+     and floating-point numbers.
 
-   o Direct-access. A small subset of a large dataset may be accessed 
-     efficiently, without first reading through all the preceding data. 
+   o Direct-access. A small subset of a large dataset may be accessed
+     efficiently, without first reading through all the preceding data.
 
-   o Appendable. Data can be appended to a netCDF dataset along one dimension 
-     without copying the dataset or redefining its structure. The structure of 
-     a netCDF dataset can be changed, though this sometimes causes the dataset 
-     to be copied. 
+   o Appendable. Data can be appended to a netCDF dataset along one dimension
+     without copying the dataset or redefining its structure. The structure of
+     a netCDF dataset can be changed, though this sometimes causes the dataset
+     to be copied.
 
-   o Sharable. One writer and multiple readers may simultaneously access the 
-     same netCDF file. 
+   o Sharable. One writer and multiple readers may simultaneously access the
+     same netCDF file.
 
 %package -n	%{libname}
 Summary:	C libraries for netcdf-4
 Group:		System/Libraries
-Provides:	lib%{name} = %{version}
 
 %description -n	%{libname}
 This package contains the netCDF-4 C libraries.
@@ -72,7 +70,6 @@ This package contains the netCDF-4 C libraries.
 %package -n	%{libname_mm}
 Summary:	C++ libraries for netcdf-4
 Group:		System/Libraries
-Provides:	lib%{name_mm} = %{version}
 
 %description -n	%{libname_mm}
 This package contains the netCDF-4 C++ libraries.
@@ -80,7 +77,6 @@ This package contains the netCDF-4 C++ libraries.
 %package -n	%{libname_fortran}
 Summary:	Fortran libraries for netcdf-4
 Group:		System/Libraries
-Provides:	lib%{name_fortran} = %{version}
 
 %description -n	%{libname_fortran}
 This package contains the netCDF-4 fortran libraries.
@@ -92,37 +88,34 @@ Requires:	%{name} = %{version}-%{release}
 Requires:	%{libname_mm} = %{version}-%{release}
 Requires:	%{libname_fortran} = %{version}-%{release}
 Requires:	hdf5-devel
-Provides:	lib%{name}-devel
-Provides:	%{name}-devel
+Provides:	lib%{name}-devel = %{version}-%{release}
+Provides:	%{name}-devel = %{version}-%{release}
 Obsoletes:	%{name}-devel < 4.0
 Conflicts:	%{name} < 4.1
 
 %description -n %{develname}
-This package contains the netCDF-4 header files, shared devel libs, and 
+This package contains the netCDF-4 header files, shared devel libs, and
 man pages.
 
 %package -n	%{staticdevelname}
 Summary:	Static libs for netcdf-4
 Group:		Development/C
 Requires:	%{develname} = %{version}-%{release}
-Provides:	lib%{name}-static-devel
-Provides:	%{name}-static-devel
-Obsoletes:	%{name}-static-devel
+Provides:	lib%{name}-static-devel = %{version}-%{release}
+Provides:	%{name}-static-devel = %{version}-%{release}
 
 %description -n %{staticdevelname}
 This package contains the netCDF-4 static libs.
 
-
 %prep
 %setup -q
-%patch1 -p0
 %patch2 -p1
 
 %build
 export FC="gfortran"
 export F90="gfortran"
-export CPPFLAGS="%optflags -fPIC"
-export FFLAGS="-fPIC %optflags"
+export CPPFLAGS="%{optflags} -fPIC"
+export FFLAGS="-fPIC %{optflags}"
 export F90FLAGS="$FFLAGS"
 export FCFLAGS="$FFLAGS"
 
@@ -131,8 +124,7 @@ export FCFLAGS="$FFLAGS"
 		--enable-netcdf-4 \
 		--enable-ncgen4 \
 		--enable-dap \
-           	--enable-extra-example-tests \
-           	--enable-valgrind-tests \
+		--enable-extra-example-tests \
 		--disable-dap-remote-tests
 
 make
@@ -214,3 +206,4 @@ rm -rf %{buildroot}
 %defattr(-,root,root,-)
 %{_libdir}/*.a
 %{_libdir}/*.la
+
