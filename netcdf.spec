@@ -11,7 +11,7 @@
 Summary:	Libraries to use the Unidata network Common Data Form (netCDF)
 Name:		netcdf
 Version:	4.2
-Release:	%mkrel 1
+Release:	2
 Group:		Development/C
 License:	NetCDF
 URL:		http://www.unidata.ucar.edu/packages/netcdf/index.html
@@ -19,17 +19,14 @@ Source0:	ftp://ftp.unidata.ucar.edu/pub/netcdf/netcdf-%{version}.tar.gz
 Source1:	ftp://ftp.unidata.ucar.edu/pub/netcdf/guidec.pdf.bz2
 Source2:	ftp://ftp.unidata.ucar.edu/pub/netcdf/guidec.html.tar.bz2
 Patch2:		netcdf-4.1-pkgconfig.patch
-Requires(post):	info-install
-Requires(postun): info-install
 BuildRequires:	gcc-gfortran
-BuildRequires:	 hdf5-devel
-BuildRequires:	libcurl-devel
+BuildRequires:	hdf5-devel
+BuildRequires:	curl-devel
 BuildRequires:	zlib-devel
 BuildRequires:	valgrind
 BuildRequires:	texinfo
 BuildRequires:	tetex-latex
 BuildRequires:	groff
-BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-buildroot
 
 %description
 NetCDF (network Common Data Form) is an interface for array-oriented data
@@ -140,37 +137,7 @@ rm -rf %{buildroot}
 bzcat %{SOURCE1} > guidec.pdf
 bzcat %{SOURCE2} | tar xvf -
 
-%if %mdkversion < 200900
-%post -p /sbin/ldconfig
-%endif
-
-%if %mdkversion < 200900
-%postun -p /sbin/ldconfig
-%endif
-
-%post
-%_install_info %{name}.info
-%_install_info netcdf-c.info
-%_install_info netcdf-cxx.info
-%_install_info netcdf-f77.info
-%_install_info netcdf-f90.info
-%_install_info netcdf-install.info
-%_install_info netcdf-tutorial.info
-
-%preun
-%_remove_install_info %{name}.info
-%_remove_install_info netcdf-c.info
-%_remove_install_info netcdf-cxx.info
-%_remove_install_info netcdf-f77.info
-%_remove_install_info netcdf-f90.info
-%_remove_install_info netcdf-install.info
-%_remove_install_info netcdf-tutorial.info
-
-%clean
-rm -rf %{buildroot}
-
 %files
-%defattr(-,root,root)
 %doc COPYRIGHT README RELEASE_NOTES guidec.pdf guidec
 %{_bindir}/ncgen
 %{_bindir}/ncgen3
@@ -180,19 +147,15 @@ rm -rf %{buildroot}
 %{_infodir}/*
 
 %files -n %{libname}
-%defattr(-,root,root,-)
 %{_libdir}/libnetcdf.so.%{major_c}*
 
 %files -n %{libname_mm}
-%defattr(-,root,root,-)
 %{_libdir}/libnetcdf_c++.so.%{major_cmm}*
 
 %files -n %{libname_fortran}
-%defattr(-,root,root,-)
 %{_libdir}/libnetcdff.so.%{major_fortran}*
 
 %files -n %{develname}
-%defattr(-,root,root,-)
 %{_bindir}/nc-config
 %{_includedir}/*.h
 %{_includedir}/*.hh
@@ -203,7 +166,5 @@ rm -rf %{buildroot}
 %{_libdir}/pkgconfig/*.pc
 
 %files -n %{staticdevelname}
-%defattr(-,root,root,-)
 %{_libdir}/*.a
-%{_libdir}/*.la
 
