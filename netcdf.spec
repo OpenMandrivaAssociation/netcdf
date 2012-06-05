@@ -27,6 +27,7 @@ BuildRequires:	curl-devel
 BuildRequires:	zlib-devel
 BuildRequires:	valgrind
 BuildRequires:	groff
+BuildRequires:	doxygen
 
 %description
 NetCDF (network Common Data Form) is an interface for array-oriented data
