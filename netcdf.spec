@@ -147,7 +147,6 @@ bzcat %{SOURCE2} | tar xvf -
 %{_bindir}/ncdump
 %{_bindir}/nccopy
 %{_mandir}/man1/*.1*
-%{_infodir}/*
 
 %files -n %{libname}
 %{_libdir}/libnetcdf.so.%{major_c}*
