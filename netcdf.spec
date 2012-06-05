@@ -18,14 +18,14 @@ URL:		http://www.unidata.ucar.edu/packages/netcdf/index.html
 Source0:	ftp://ftp.unidata.ucar.edu/pub/netcdf/netcdf-%{version}.tar.gz
 Source1:	ftp://ftp.unidata.ucar.edu/pub/netcdf/guidec.pdf.bz2
 Source2:	ftp://ftp.unidata.ucar.edu/pub/netcdf/guidec.html.tar.bz2
+Patch0:		netcdf-4.2-sfmt.patch
+Patch1:		netcdf-4.2-no_date_time.patch
 Patch2:		netcdf-4.1-pkgconfig.patch
 BuildRequires:	gcc-gfortran
 BuildRequires:	hdf5-devel
 BuildRequires:	curl-devel
 BuildRequires:	zlib-devel
 BuildRequires:	valgrind
-BuildRequires:	texinfo
-BuildRequires:	tetex-latex
 BuildRequires:	groff
 
 %description
@@ -106,6 +106,8 @@ This package contains the netCDF-4 static libs.
 
 %prep
 %setup -q
+%patch0 -p1
+%patch1 -p1
 %patch2 -p1
 
 %build
