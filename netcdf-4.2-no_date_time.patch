@@ -1,0 +1,11 @@
+--- netcdf-4.2.orig/libdispatch/derror.c	2012-03-20 21:30:48.000000000 -0400
++++ netcdf-4.2/libdispatch/derror.c	2012-04-09 17:03:31.728636583 -0400
+@@ -10,7 +10,7 @@
+ #include "ncdispatch.h"
+ 
+ /* Tell the user the version of netCDF. */
+-static const char nc_libvers[] = PACKAGE_VERSION " of "__DATE__" "__TIME__" $";
++static const char nc_libvers[] = PACKAGE_VERSION " $";
+ 
+ /** \defgroup lib_version Library Version 
+ 

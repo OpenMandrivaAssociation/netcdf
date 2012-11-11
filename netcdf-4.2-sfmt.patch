@@ -1,0 +1,20 @@
+diff -urN netcdf-4.2/ncdump/vardata.c netcdf-4.2-patched/ncdump/vardata.c
+--- netcdf-4.2/ncdump/vardata.c	2012-03-21 12:30:51.000000000 +1100
++++ netcdf-4.2-patched/ncdump/vardata.c	2012-06-05 18:14:49.474898712 +1100
+@@ -122,14 +122,14 @@
+ 
+     if (len_prefix > 0) {
+ 	if (first_item || make_newline) {
+-	    printf (prefix);
++	    printf ("%s", prefix);
+             linep = linep + len_prefix;
+ 	}
+     }
+ 
+ /* (3) Output caller's string value. */
+ 
+-     printf (cp);
++     printf ("%s", cp);
+ }
+ 
+ 
