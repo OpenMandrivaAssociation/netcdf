@@ -27,6 +27,7 @@ BuildRequires:	valgrind
 BuildRequires:	texinfo
 BuildRequires:	tetex-latex
 BuildRequires:	groff
+BuildRequires:	tirpc-devel
 
 %description
 NetCDF (network Common Data Form) is an interface for array-oriented data
