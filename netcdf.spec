@@ -21,7 +21,7 @@ Source2:	ftp://ftp.unidata.ucar.edu/pub/netcdf/guidec.html.tar.bz2
 Patch2:		netcdf-4.1-pkgconfig.patch
 BuildRequires:	gcc-gfortran
 BuildRequires:	 hdf5-devel
-BuildRequires:	libcurl-devel
+BuildRequires:	curl-devel
 BuildRequires:	zlib-devel
 BuildRequires:	valgrind
 BuildRequires:	texinfo
