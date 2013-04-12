@@ -116,7 +116,7 @@ export CPPFLAGS="%{optflags} -fPIC"
 export FFLAGS="-fPIC %{optflags}"
 export F90FLAGS="$FFLAGS"
 export FCFLAGS="$FFLAGS"
-
+export LIBS="-ltirpc"
 %define _disable_ld_no_undefined 1
 %configure2_5x --enable-shared \
 		--enable-netcdf-4 \
