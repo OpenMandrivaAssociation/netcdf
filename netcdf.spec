@@ -1,22 +1,19 @@
 %define major_c 7
-%define major_cmm 4
-%define major_fortran 5
 %define libname %mklibname %{name} %{major_c}
-%define libname_mm %mklibname %{name}mm %{major_cmm}
-%define libname_fortran %mklibname %{name}_fortran %{major_fortran}
 %define devname %mklibname -d %{name}
+%define _disable_lto 1
 
 Summary:	Libraries to use the Unidata network Common Data Form (netCDF)
 Name:		netcdf
-Version:	4.1.3
-Release:	13
+Version:	4.3.3.1
+Release:	1
 Group:		Development/C
 License:	NetCDF
 Url:		http://www.unidata.ucar.edu/packages/netcdf/index.html
 Source0:	ftp://ftp.unidata.ucar.edu/pub/netcdf/netcdf-%{version}.tar.gz
 Source1:	ftp://ftp.unidata.ucar.edu/pub/netcdf/guidec.pdf.bz2
 Source2:	ftp://ftp.unidata.ucar.edu/pub/netcdf/guidec.html.tar.bz2
-Patch2:		netcdf-4.1-pkgconfig.patch
+Patch2:		netcdf-4.3.3.1-pkgconfig.patch
 BuildRequires:	gcc-gfortran
 BuildRequires:	groff
 BuildRequires:	hdf5-devel
@@ -60,26 +57,10 @@ Group:		System/Libraries
 %description -n	%{libname}
 This package contains the netCDF-4 C libraries.
 
-%package -n	%{libname_mm}
-Summary:	C++ libraries for netcdf-4
-Group:		System/Libraries
-
-%description -n	%{libname_mm}
-This package contains the netCDF-4 C++ libraries.
-
-%package -n	%{libname_fortran}
-Summary:	Fortran libraries for netcdf-4
-Group:		System/Libraries
-
-%description -n	%{libname_fortran}
-This package contains the netCDF-4 fortran libraries.
-
 %package -n	%{devname}
 Summary:	Development files for netcdf-4
 Group:		Development/C
 Requires:	%{name} = %{version}-%{release}
-Requires:	%{libname_mm} = %{version}-%{release}
-Requires:	%{libname_fortran} = %{version}-%{release}
 Provides:	%{name}-devel = %{version}-%{release}
 
 %description -n %{devname}
@@ -91,19 +72,13 @@ man pages.
 %apply_patches
 
 %build
-export FC="gfortran"
-export F90="gfortran"
 export CPPFLAGS="%{optflags} -fPIC"
-export FFLAGS="-fPIC %{optflags}"
-export F90FLAGS="$FFLAGS"
-export FCFLAGS="$FFLAGS"
 export LIBS="-ltirpc"
 %define _disable_ld_no_undefined 1
 %configure2_5x \
 	--enable-shared \
 	--disable-static \
 	--enable-netcdf-4 \
-	--enable-ncgen4 \
 	--enable-dap \
 	--enable-extra-example-tests \
 	--disable-dap-remote-tests
@@ -121,30 +96,21 @@ bzcat %{SOURCE2} | tar xvf -
 
 
 %files
-%doc COPYRIGHT README RELEASE_NOTES guidec.pdf guidec
+%doc COPYRIGHT README.md RELEASE_NOTES.md guidec.pdf guidec
 %{_bindir}/ncgen
 %{_bindir}/ncgen3
 %{_bindir}/ncdump
 %{_bindir}/nccopy
 %{_mandir}/man1/*.1*
-%{_infodir}/*
 
 %files -n %{libname}
 %{_libdir}/libnetcdf.so.%{major_c}*
 
-%files -n %{libname_mm}
-%{_libdir}/libnetcdf_c++.so.%{major_cmm}*
-
-%files -n %{libname_fortran}
-%{_libdir}/libnetcdff.so.%{major_fortran}*
-
 %files -n %{devname}
 %{_bindir}/nc-config
 %{_includedir}/*.h
-%{_includedir}/*.hh
-%{_includedir}/*.inc
-%{_includedir}/*.mod
 %{_libdir}/*.so
+%{_libdir}/libnetcdf.settings
 %{_mandir}/man3/*.3*
 %{_libdir}/pkgconfig/*.pc
 
