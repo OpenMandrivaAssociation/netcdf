@@ -1,11 +1,11 @@
-%define major_c 7
+%define major_c 13
 %define libname %mklibname %{name} %{major_c}
 %define devname %mklibname -d %{name}
 %define _disable_lto 1
 
 Summary:	Libraries to use the Unidata network Common Data Form (netCDF)
 Name:		netcdf
-Version:	4.3.3.1
+Version:	4.6.0
 Release:	1
 Group:		Development/C
 License:	NetCDF
@@ -13,7 +13,7 @@ Url:		http://www.unidata.ucar.edu/packages/netcdf/index.html
 Source0:	ftp://ftp.unidata.ucar.edu/pub/netcdf/netcdf-%{version}.tar.gz
 Source1:	ftp://ftp.unidata.ucar.edu/pub/netcdf/guidec.pdf.bz2
 Source2:	ftp://ftp.unidata.ucar.edu/pub/netcdf/guidec.html.tar.bz2
-Patch2:		netcdf-4.3.3.1-pkgconfig.patch
+#Patch2:		netcdf-4.3.3.1-pkgconfig.patch
 BuildRequires:	gcc-gfortran
 BuildRequires:	groff
 BuildRequires:	hdf5-devel
@@ -72,6 +72,8 @@ man pages.
 %apply_patches
 
 %build
+export CC=gcc
+export CXX=g++
 export CPPFLAGS="%{optflags} -fPIC"
 export LIBS="-ltirpc"
 %define _disable_ld_no_undefined 1
@@ -94,6 +96,10 @@ make check
 bzcat %{SOURCE1} > guidec.pdf
 bzcat %{SOURCE2} | tar xvf -
 
+# test plugins accidentally get installed
+rm -f %{buildroot}%{_libdir}/libmisc.so
+rm -f %{buildroot}%{_libdir}/libbzip2.so
+
 
 %files
 %doc COPYRIGHT README.md RELEASE_NOTES.md guidec.pdf guidec
@@ -101,6 +107,7 @@ bzcat %{SOURCE2} | tar xvf -
 %{_bindir}/ncgen3
 %{_bindir}/ncdump
 %{_bindir}/nccopy
+%{_bindir}/ocprint
 %{_mandir}/man1/*.1*
 
 %files -n %{libname}
