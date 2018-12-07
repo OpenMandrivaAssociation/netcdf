@@ -14,7 +14,6 @@ Source0:	ftp://ftp.unidata.ucar.edu/pub/netcdf/netcdf-c-%{version}.tar.gz
 Source1:	ftp://ftp.unidata.ucar.edu/pub/netcdf/guidec.pdf.bz2
 Source2:	ftp://ftp.unidata.ucar.edu/pub/netcdf/guidec.html.tar.bz2
 #Patch2:		netcdf-4.3.3.1-pkgconfig.patch
-BuildRequires:	gcc-gfortran
 BuildRequires:	groff
 BuildRequires:	hdf5-devel
 BuildRequires:	pkgconfig(libcurl)
@@ -72,11 +71,6 @@ man pages.
 %apply_patches
 
 %build
-export CC=gcc
-export CXX=g++
-export CPPFLAGS="%{optflags} -fPIC"
-export LIBS="-ltirpc"
-%define _disable_ld_no_undefined 1
 %configure2_5x \
 	--enable-shared \
 	--disable-static \
