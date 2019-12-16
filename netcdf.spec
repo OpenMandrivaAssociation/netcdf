@@ -1,11 +1,11 @@
-%define major_c 13
+%define major_c 15
 %define libname %mklibname %{name} %{major_c}
 %define devname %mklibname -d %{name}
 %define _disable_lto 1
 
 Summary:	Libraries to use the Unidata network Common Data Form (netCDF)
 Name:		netcdf
-Version:	4.6.2
+Version:	4.7.3
 Release:	1
 Group:		Development/C
 License:	NetCDF
@@ -71,7 +71,7 @@ man pages.
 %apply_patches
 
 %build
-%configure2_5x \
+%configure \
 	--enable-shared \
 	--disable-static \
 	--enable-netcdf-4 \
@@ -79,7 +79,7 @@ man pages.
 	--enable-extra-example-tests \
 	--disable-dap-remote-tests
 
-make
+%make_build
 
 %check
 %ifarch %arm
@@ -89,7 +89,7 @@ make check
 %endif
 
 %install
-%makeinstall_std
+%make_install
 
 bzcat %{SOURCE1} > guidec.pdf
 bzcat %{SOURCE2} | tar xvf -
