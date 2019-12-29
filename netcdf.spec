@@ -13,7 +13,6 @@ Url:		http://www.unidata.ucar.edu/packages/netcdf/index.html
 Source0:	ftp://ftp.unidata.ucar.edu/pub/netcdf/netcdf-c-%{version}.tar.gz
 Source1:	ftp://ftp.unidata.ucar.edu/pub/netcdf/guidec.pdf.bz2
 Source2:	ftp://ftp.unidata.ucar.edu/pub/netcdf/guidec.html.tar.bz2
-#Patch2:		netcdf-4.3.3.1-pkgconfig.patch
 BuildRequires:	groff
 BuildRequires:	hdf5-devel
 BuildRequires:	pkgconfig(libcurl)
@@ -68,7 +67,7 @@ man pages.
 
 %prep
 %setup -qn netcdf-c-%{version}
-%apply_patches
+%autopatch -p1
 
 %build
 %configure \
