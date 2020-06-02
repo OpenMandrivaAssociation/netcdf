@@ -1,11 +1,10 @@
 %define major_c 15
 %define libname %mklibname %{name} %{major_c}
 %define devname %mklibname -d %{name}
-%define _disable_lto 1
 
 Summary:	Libraries to use the Unidata network Common Data Form (netCDF)
 Name:		netcdf
-Version:	4.7.3
+Version:	4.7.4
 Release:	1
 Group:		Development/C
 License:	NetCDF
@@ -97,7 +96,6 @@ bzcat %{SOURCE2} | tar xvf -
 rm -f %{buildroot}%{_libdir}/libmisc.so
 rm -f %{buildroot}%{_libdir}/libbzip2.so
 
-
 %files
 %doc COPYRIGHT README.md RELEASE_NOTES.md guidec.pdf guidec
 %{_bindir}/ncgen
@@ -116,4 +114,3 @@ rm -f %{buildroot}%{_libdir}/libbzip2.so
 %{_libdir}/libnetcdf.settings
 %{_mandir}/man3/*.3*
 %{_libdir}/pkgconfig/*.pc
-
