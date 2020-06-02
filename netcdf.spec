@@ -1,4 +1,4 @@
-%define major_c 15
+%define major_c 18
 %define libname %mklibname %{name} %{major_c}
 %define devname %mklibname -d %{name}
 %define _disable_lto 1
