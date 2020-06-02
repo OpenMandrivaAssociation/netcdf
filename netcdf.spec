@@ -1,6 +1,7 @@
 %define major_c 15
 %define libname %mklibname %{name} %{major_c}
 %define devname %mklibname -d %{name}
+%define _disable_lto 1
 
 Summary:	Libraries to use the Unidata network Common Data Form (netCDF)
 Name:		netcdf
