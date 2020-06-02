@@ -80,11 +80,7 @@ man pages.
 %make_build
 
 %check
-%ifarch %arm
-make check || cat dap4_test/test-suite.log
-%else
-make check
-%endif
+make check || cat */test-suite.log && exit 1
 
 %install
 %make_install
