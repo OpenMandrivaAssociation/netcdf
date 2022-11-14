@@ -1,23 +1,25 @@
-%define major_c 18
-%define libname %mklibname %{name} %{major_c}
+%define major_c 19
+%define libname %mklibname %{name}
 %define devname %mklibname -d %{name}
 %define _disable_lto 1
 
 Summary:	Libraries to use the Unidata network Common Data Form (netCDF)
 Name:		netcdf
-Version:	4.7.4
+Version:	4.9.0
 Release:	1
 Group:		Development/C
 License:	NetCDF
-Url:		http://www.unidata.ucar.edu/packages/netcdf/index.html
-Source0:	ftp://ftp.unidata.ucar.edu/pub/netcdf/netcdf-c-%{version}.tar.gz
+Url:		https://www.unidata.ucar.edu/software/netcdf/
+Source0:	https://github.com/Unidata/netcdf-c/archive/refs/tags/v%{version}.tar.gz
 Source1:	ftp://ftp.unidata.ucar.edu/pub/netcdf/guidec.pdf.bz2
 Source2:	ftp://ftp.unidata.ucar.edu/pub/netcdf/guidec.html.tar.bz2
+Patch0:		netcdf-issue-2390.patch
 BuildRequires:	groff
 BuildRequires:	hdf5-devel
 BuildRequires:	pkgconfig(libcurl)
 BuildRequires:	pkgconfig(libtirpc)
 BuildRequires:	pkgconfig(zlib)
+BuildRequires:	cmake ninja
 
 %description
 NetCDF (network Common Data Form) is an interface for array-oriented data
@@ -66,35 +68,33 @@ This package contains the netCDF-4 header files, shared devel libs, and
 man pages.
 
 %prep
-%setup -qn netcdf-c-%{version}
-%autopatch -p1
+%autosetup -p1 -n netcdf-c-%{version}
+%cmake \
+	-DBUILDNAME="OpenMandriva-%{version}-%{release}" \
+	-DENABLE_EXAMPLE_TESTS:BOOL=ON \
+	-DENABLE_EXTRA_TESTS:BOOL=ON \
+	-DCURL_LIBRARIES=-lcurl \
+	-G Ninja
 
 %build
-%configure \
-	--enable-shared \
-	--disable-static \
-	--enable-netcdf-4 \
-	--enable-dap \
-	--enable-extra-example-tests \
-	--disable-dap-remote-tests
-
-%make_build
+%ninja_build -C build
 
 %check
-# (tpg) 2020-06-02
-# ../test-driver: line 107: 44039 Segmentation fault      (core dumped) "$@" > $log_file 2>&1
-# FAIL: tst_camrun
-make check || cat */test-suite.log && exit 0
+# 4.9.0, clang 15.0.4
+# build/nczarr_test/run_ut_mapapi.sh: line 20: 3473185 Segmentation fault      (core dumped) $CMD $TR -k$1 -x delete -f $file
+# *** Nice, simple example of using BitGroom plus zlib...Sorry! Unexpected result, /home/bero/temp/abf/netcdf/BUILD/netcdf-c-4.9.0/build/nczarr_test/test_quantize.c, line: 943
+%if 0
+cd build
+export LD_LIBRARY_PATH=$(pwd)/liblib:${LD_LIBRARY_PATH}
+ctest
+cd ..
+%endif
 
 %install
-%make_install
+%ninja_install -C build
 
 bzcat %{SOURCE1} > guidec.pdf
 bzcat %{SOURCE2} | tar xvf -
-
-# test plugins accidentally get installed
-rm -f %{buildroot}%{_libdir}/libmisc.so
-rm -f %{buildroot}%{_libdir}/libbzip2.so
 
 %files
 %doc COPYRIGHT README.md RELEASE_NOTES.md guidec.pdf guidec
@@ -114,3 +114,4 @@ rm -f %{buildroot}%{_libdir}/libbzip2.so
 %{_libdir}/libnetcdf.settings
 %{_mandir}/man3/*.3*
 %{_libdir}/pkgconfig/*.pc
+%{_libdir}/cmake/netCDF

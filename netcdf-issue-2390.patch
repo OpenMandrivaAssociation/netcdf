@@ -1,0 +1,12 @@
+diff -up netcdf-c-4.9.0/CMakeLists.txt.omv~ netcdf-c-4.9.0/CMakeLists.txt
+--- netcdf-c-4.9.0/CMakeLists.txt.omv~	2022-11-14 11:13:13.337875809 +0100
++++ netcdf-c-4.9.0/CMakeLists.txt	2022-11-14 11:13:23.601284409 +0100
+@@ -39,7 +39,7 @@ SET(NC_VERSION ${netCDF_VERSION})
+ SET(PACKAGE_VERSION ${VERSION})
+ 
+ # These values should match those in configure.ac
+-SET(netCDF_LIB_VERSION 19})
++SET(netCDF_LIB_VERSION 19)
+ SET(netCDF_SO_VERSION 19)
+ 
+ # Version of the dispatch table. This must match the value in
