@@ -5,7 +5,7 @@
 
 Summary:	Libraries to use the Unidata network Common Data Form (netCDF)
 Name:		netcdf
-Version:	4.9.0
+Version:	4.9.1
 Release:	1
 Group:		Development/C
 License:	NetCDF
@@ -13,7 +13,6 @@ Url:		https://www.unidata.ucar.edu/software/netcdf/
 Source0:	https://github.com/Unidata/netcdf-c/archive/refs/tags/v%{version}.tar.gz
 Source1:	ftp://ftp.unidata.ucar.edu/pub/netcdf/guidec.pdf.bz2
 Source2:	ftp://ftp.unidata.ucar.edu/pub/netcdf/guidec.html.tar.bz2
-Patch0:		netcdf-issue-2390.patch
 BuildRequires:	groff
 BuildRequires:	hdf5-devel
 BuildRequires:	pkgconfig(libcurl)
